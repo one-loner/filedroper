@@ -9,10 +9,12 @@ There are two versions:
 
 Installation:   
 * Install a web server with php support.   
-* Copy index.php or index1.php (depending on your needs) and styles.css to the root directory of your web server (usually /var/www/html).   
+* Copy index.php or index1.php (depending on your needs) and styles.css to the root directory of your web server (usually /var/www/html) with name index.php.   
 * Create the uploads/ and captcha/ folders in the root directory of your web server.   
+* Copy index.html from the corresponding folders in the repository to these folders.   
 * Copy captcha images to the captcha/ folder and give them the correct names.   
 * Correctly set the owner of the web server root directory and its contents.   
+   
    
    
 ## RU   
@@ -26,9 +28,8 @@ Installation:
 
 Установка:   
 * Установить веб-сервер с поддержкой php.   
-* Скопировать index.php или index1.php (в заваисимости от ваших потребностей) и styles.css в корневую директорию вашего веб-сервера (обычно это /var/www/html).   
+* Скопировать index.php или index1.php (в заваисимости от ваших потребностей) и styles.css в корневую директорию вашего веб-сервера (обычно это /var/www/html)с именем index.php   
 * Создать папки uploads/ и captcha/ в корневой директории вашего веб сервера.   
+* Скопировать в эти папки index.html из соответствующих папок в репозитории.   
 * Скопировать картинки для капчи в папку captcha/ и дать им верные имена.   
 * Правильно установить владельца корневой директории веб сервера и её содержимого.   
-
-
