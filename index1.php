@@ -9,18 +9,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-        $fileName = basename($_FILES['file']['name']);
-        $randomName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
-        $uploadFile = $uploadDir . $randomName;
+        
+        // Проверка размера файла
+        $fileSizeLimit = 50 * 1024 * 1024; // 50 МБ
+        if ($_FILES['file']['size'] > $fileSizeLimit) {
+            echo "<div class='error'>Error! File size over 50 MB.</div>";
+        } else {
+            $fileName = basename($_FILES['file']['name']);
+            $randomName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+            $uploadFile = $uploadDir . $randomName;
 
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
-            $fileLink = 'index.php?file=' . $randomName;
-            $fileLink1 = 'uploads/' . $randomName;
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+                $fileLink = 'index.php?file=' . $randomName;
+                $fileLink1 = 'uploads/' . $randomName;
             echo "<div class='message'>File uploaded.";
             echo "<div class='message'>One-time link (the file will be deleted after downloading): <a href='$fileLink'>$fileLink</a></div>";
             echo "<div class='message'>Permanent link (the file will remain on the server after downloading): <a href='$fileLink1'>$fileLink1</a></div>";
-        } else {
-            echo "<div class='error'>Error uploading file.</div>";
+            } else {
+                echo "<div class='error'>Error uploading file.</div>";
+            }
         }
     } else {
         echo "<div class='error'>Captcha incorrect.</div>";
@@ -54,7 +61,7 @@ if (isset($_GET['file'])) {
         unlink($filePath); // Удаление файла после скачивания
         exit;
     } else {
-        echo "<div class='error'>Error 404. File not found.</div>";
+        echo "<div class='error'>Ошибка 404. Файл не найден.</div>";
     }
 }
 ?>
@@ -67,13 +74,13 @@ if (isset($_GET['file'])) {
     <link rel="stylesheet" href="styles.css"> <!-- Подключение CSS -->
 </head>
 <body>
-    <h1>Upload file. </h1>
+    <h1>Загрузить файл.</h1>
     <form enctype="multipart/form-data" method="POST">
         <input type="file" name="file" required>
         <br>
         <img src="<?php echo $captchaImage; ?>" alt="Капча">
         <br>
-        <input type="text" name="captcha" placeholder="You know)" required>
+        <input type="text" name="captcha" placeholder="You now)" required>
         <br>
         <input type="submit" value="Upload">
     </form>

@@ -9,15 +9,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-        $fileName = basename($_FILES['file']['name']);
-        $randomName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
-        $uploadFile = $uploadDir . $randomName;
-
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
-            $fileLink = 'index.php?file=' . $randomName;
-            echo "<div class='message'>File uploaded. Link to download: <a href='$fileLink'>$fileLink</a></div>";
+        
+        // Проверка размера файла
+        $fileSizeLimit = 50 * 1024 * 1024; // 50 МБ
+        if ($_FILES['file']['size'] > $fileSizeLimit) {
+            echo "<div class='error'>Error! File size over 50 MB.</div>";
         } else {
-            echo "<div class='error'>Error uploading file.</div>";
+            $fileName = basename($_FILES['file']['name']);
+            $randomName = uniqid() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+            $uploadFile = $uploadDir . $randomName;
+
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+                $fileLink = 'index.php?file=' . $randomName;
+                echo "<div class='message'>File uploaded. Link to download: <a href='$fileLink'>$fileLink</a></div>";
+            } else {
+                echo "<div class='error'>Error uploading file.</div>";
+            }
         }
     } else {
         echo "<div class='error'>Captcha incorrect.</div>";
@@ -30,7 +37,7 @@ if (count($captchaImages) > 0) {
     $captchaImage = $captchaImages[array_rand($captchaImages)];
     $_SESSION['captcha'] = pathinfo($captchaImage, PATHINFO_FILENAME);
 } else {
-    die("No captcha images. Please, put capctcha images in captcha/");
+   die("No captcha images. Please, put capctcha images in captcha/");
 }
 
 // Обработка скачивания файла
@@ -64,7 +71,7 @@ if (isset($_GET['file'])) {
     <link rel="stylesheet" href="styles.css"> <!-- Подключение CSS -->
 </head>
 <body>
-    <h1>Upload file. </h1>
+    <h1>Загрузить файл.</h1>
     <form enctype="multipart/form-data" method="POST">
         <input type="file" name="file" required>
         <br>
